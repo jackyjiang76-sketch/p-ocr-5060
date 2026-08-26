@@ -1,0 +1,6 @@
+# 临时/产物
+*.png
+*.md.tmp
+__pycache__/
+*.pyc
+C:\ocr_job/
