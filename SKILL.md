@@ -1,5 +1,5 @@
 ---
-name: p-ocr-skill
+name: p-ocr-5060
 description: 端到端文档解析 OCR，基于 PaddleOCR-VL-1.6（百度，0.9B，OmniDocBench v1.6 官方评测 96.34 分第二名，Apache-2.0）。输入图片/截图/扫描件，输出自然阅读顺序的 Markdown。本地 WSL2 + vLLM 0.22.1 部署（官方 README 推荐的"优化推理服务器"加速路径），走 OpenAI 兼容接口 POST /v1/chat/completions。Use when the user asks to OCR a document image with PaddleOCR-VL, mentions "p-ocr", "PaddleOCR-VL", "PP-OCRv6", or wants Paddle ecosystem document parsing to Markdown (图片转markdown, 文档解析, PaddleOCR). Triggers include "p-ocr", "PaddleOCR-VL", "PaddleOCR-VL-1.6".
 ---
 
