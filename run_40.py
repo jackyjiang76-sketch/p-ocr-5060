@@ -6,7 +6,7 @@ from paddleocr import PaddleOCRVL
 
 PNG = r"C:\ocr_job\png"
 OUTROOT = r"C:\ocr_job\out40"
-BATCH = int(sys.argv[1]) if len(sys.argv) > 1 else 36
+BATCH = int(sys.argv[1]) if len(sys.argv) > 1 else 8
 os.makedirs(OUTROOT, exist_ok=True)
 
 pipe = PaddleOCRVL(
