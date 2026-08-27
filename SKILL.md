@@ -7,6 +7,21 @@ description: 端到端文档解析 OCR，基于 PaddleOCR-VL-1.6（百度，0.9B
 
 离线本地推理：**一张文档图片 → 一份 Markdown**。百度 PaddlePaddle 生态，中文文档识别表现优秀。
 
+## 输入分流（重要：先判类型再选工具）
+
+**本 skill（p-ocr）只对"位图/扫描型"输入有效。** 拿到 PDF/图片后，**必须先判定类型**，否则会白跑或得到空结果：
+
+| 类型判定 (metrics) | 含义 | 应走工具 |
+|---|---|---|
+| `SCAN`：imgs>0 且 textlen<20 | 位图扫描件（真扫描/照片） | **本 skill（p-ocr 混合管线）** |
+| `VECTOR`：imgs=0, textlen=0, drawings>50 | 纯矢量 CAD 线图，无文字层 | **不用 p-ocr**，转 `cad-text-parser`（DWG/DXF 源文件） |
+| `TEXT`：textlen>=20 且 imgs=0 | 有文字层的 PDF | **直接 pymupdf get_text**，无需 OCR |
+| `MIXED`：textlen>=20 且 imgs>0 | 文字+图片混合 | 文字层直接提，图片块交 p-ocr |
+
+路由脚本：`python route.py <pdf|png|jpg>`（输出 kind + metrics + 建议工具）。**注意**：p-ocr 是"单图→Markdown"，输入须先渲染成 PNG（`convert_40.py` / `pdf_to_png.py`），且只处理 SCAN/MIXED 的图片块。
+
+**已实测（40 张人防图纸）**：16 张真扫描（OCR 有效），24 张矢量 CAD 导出（`textlen=0,imgs=0,deep_img=0,red≈0`——无文字层、无内嵌图片、无红章；OCR 拿不到任何内容，须回 DWG 走 cad-text-parser）。**对 VECTOR 输入，OCR 没有就是没有，不要硬跑。**
+
 ## 快速使用
 
 在 Windows 侧（Git Bash / PowerShell）执行：
