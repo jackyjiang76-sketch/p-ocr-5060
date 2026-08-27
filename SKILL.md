@@ -36,6 +36,26 @@ MSYS_NO_PATHCONV=1 wsl -d Ubuntu -- /root/.tools/p-ocr/.venv/bin/python /mnt/c/U
 - 第二个参数（可选）：Markdown 输出路径；不传则只打印到 stdout
 - 脚本自带服务自愈：health 不通时自动 `systemctl restart p-ocr-serve` 并等待就绪（最长 300s）
 
+## 管线参数（全部开启，与 pocr_hybrid.py / run_40.py 一致）
+
+混合管线 `PaddleOCRVL(...)` 实际启用（**8 个 use_* 全 True**）：
+
+| 参数 | 值 | 作用 |
+|------|-----|------|
+| `pipeline_version` | `v1.6` | PaddleOCR-VL-1.6 |
+| `use_doc_orientation_classify` | `True` | 自动判页面旋转方向 |
+| `use_doc_unwarping` | `True` | 弯曲/透视/扫描畸变矫正 |
+| `use_layout_detection` | `True` | 标题/正文/表格/图片/印章版面检测（PP-DocLayoutV3） |
+| `use_chart_recognition` | `True` | 图表识别 |
+| `use_seal_recognition` | `True` | 印章区域识别 |
+| `use_ocr_for_image_block` | `True` | 图片区域也走 OCR |
+| `format_block_content` | `True` | 保留结构化内容 + Markdown |
+| `merge_layout_blocks` | `True` | 合并同区域版面块 |
+| `vl_rec_backend` | `vllm-server` | VL 识别走 vLLM(8001)，加速 |
+| `vl_rec_api_model_name` | `paddleocr-vl-1.6` | 必须与 vLLM served-model-name 一致 |
+
+生成参数：`temperature=0.0`（贪心，可复现）、`top_p=1.0`、`repetition_penalty=1.1`、`max_new_tokens=8192`。
+
 ## 架构（官方部署路径）
 
 | 组件 | 说明 |
